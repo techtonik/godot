@@ -163,6 +163,8 @@ def get_opts():
 	return [
 		('mingw_prefix','Mingw Prefix',mingw32),
 		('mingw_prefix_64','Mingw Prefix 64 bits',mingw64),
+		('angle', 'use ANGLE', 'no'),
+		('theora_opt', "Use Theora's optimized inline assembly", "yes"),
 	]
 
 def get_flags():
@@ -240,10 +242,23 @@ def configure(env):
 		env.Append(CCFLAGS=['/DWIN32'])
 		env.Append(CCFLAGS=['/DTYPED_METHOD_BIND'])
 
-		env.Append(CCFLAGS=['/DGLES2_ENABLED'])
+		if env['angle'] == "yes":
+			env.Append(CCFLAGS=['/DGLES2_ENABLED'])
+			env.Append(CCFLAGS=['/DANGLE_ENABLED'])
+			env.Append(CPPPATH=['#drivers/angle/include'])
 
-		env.Append(CCFLAGS=['/DGLEW_ENABLED'])
-		LIBS=['winmm','opengl32','dsound','kernel32','ole32','oleaut32','user32','gdi32', 'IPHLPAPI','Shlwapi', 'wsock32', 'shell32','advapi32','dinput8','dxguid']
+		else:
+			env.Append(CCFLAGS=['/DGLES2_ENABLED'])
+			env.Append(CCFLAGS=['/DGLEW_ENABLED'])
+
+		LIBS=['winmm','dsound','kernel32','ole32','oleaut32','user32','gdi32', 'IPHLPAPI','Shlwapi', 'wsock32', 'shell32','advapi32','dinput8','dxguid']
+
+		if env['angle']=="yes":
+			LIBS += ['d3d9']
+		else:
+			LIBS += ['opengl32']
+
+
 		env.Append(LINKFLAGS=[p+env["LIBSUFFIX"] for p in LIBS])
 
 		env.Append(LIBPATH=[os.getenv("WindowsSdkDir")+"/Lib"])
@@ -291,6 +306,9 @@ def configure(env):
                         print "Failed to detect MSVC compiler architecture version... Defaulting to 32bit executable settings (forcing bits=32). Compilation attempt will continue, but SCons can not detect for what architecture this build is compiled for. You should check your settings/compilation setup."                        
 		if env["bits"]=="64":
 			env.Append(CCFLAGS=['/D_WIN64'])
+
+		if env['theora_opt'] == "yes":
+			env["x86_opt_vc"]=True
 	else:
 
 		# Workaround for MinGW. See:
@@ -361,7 +379,8 @@ def configure(env):
 		env['AR'] = mingw_prefix+"ar"
 		env['RANLIB'] = mingw_prefix+"ranlib"
 		env['LD'] = mingw_prefix+"g++"
-		env["x86_opt_gcc"]=True
+		if env['theora_opt'] == "yes":
+			env["x86_opt_gcc"]=True
 
 		#env['CC'] = "winegcc"
 		#env['CXX'] = "wineg++"
