@@ -32,24 +32,24 @@ sources = [
 ]
 
 sources_x86 = [
-	"theora/x86/mmxencfrag.c",
-	"theora/x86/mmxfdct.c",
-	"theora/x86/mmxfrag.c",
-	"theora/x86/mmxidct.c",
-	"theora/x86/mmxstate.c",
-	"theora/x86/sse2fdct.c",
-	"theora/x86/x86enc.c",
-	"theora/x86/x86state.c",
+	"x86/mmxencfrag.c",
+	"x86/mmxfdct.c",
+	"x86/mmxfrag.c",
+	"x86/mmxidct.c",
+	"x86/mmxstate.c",
+	"x86/sse2fdct.c",
+	"x86/x86enc.c",
+	"x86/x86state.c",
 ]
 
 sources_x86_vc = [
-	"theora/x86_vc/mmxencfrag.c",
-	"theora/x86_vc/mmxfdct.c",
-	"theora/x86_vc/mmxfrag.c",
-	"theora/x86_vc/mmxidct.c",
-	"theora/x86_vc/mmxstate.c",
-	"theora/x86_vc/x86enc.c",
-	"theora/x86_vc/x86state.c",
+	"x86_vc/mmxencfrag.c",
+	"x86_vc/mmxfdct.c",
+	"x86_vc/mmxfrag.c",
+	"x86_vc/mmxidct.c",
+	"x86_vc/mmxstate.c",
+	"x86_vc/x86enc.c",
+	"x86_vc/x86state.c",
 ]
 
 env.drivers_sources += sources
